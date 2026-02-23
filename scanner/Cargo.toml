@@ -1,0 +1,19 @@
+[package]
+name = "scanner"
+version = "0.1.0"
+edition = "2021"
+description = "Minimal ICMPv6 echo prober for IPv6 TGA evaluation"
+
+[[bin]]
+name = "scanner"
+path = "src/main.rs"
+
+[dependencies]
+pnet       = "0.35"
+clap       = { version = "4", features = ["derive"] }
+dashmap    = "6"
+anyhow     = "1"
+rand       = "0.8"
+
+[profile.release]
+opt-level = 3
