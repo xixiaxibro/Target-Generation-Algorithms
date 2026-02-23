@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# 虚拟环境
+venv/
+.venv/
+env/
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
+
+# Claude Code 本地配置
+.claude/
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 数据/输出文件（如有）
+*.txt.out
+output/
