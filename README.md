@@ -22,7 +22,7 @@ The project reproduces and extends algorithms studied in:
 | 6Graph     | Python           | **Complete**   | Graph pattern mining TGA |
 | 6Scan      | C/C++            | Stub           | Systematic IPv6 scanning |
 | 6VecLM     | Python           | Stub           | Vector language model |
-| DET        | Python           | Stub           | Dynamic entropy-based targeting |
+| DET        | Python           | **Complete**   | Density estimation tree, min-entropy DHC |
 | entropy-ip | Python/Bash      | Stub           | Entropy/Bayesian address generation |
 
 ---
@@ -49,7 +49,9 @@ Target Generation Algorithms/
 │   │   └── generation.py     #   re-export from six_forest.generation
 │   ├── six_scan/             # stub
 │   ├── six_vec_lm/           # stub
-│   ├── det/                  # stub
+│   ├── det/                  # DET — complete
+│   │   ├── partition.py      #   DHC with minimum-entropy split (LIFO/DFS)
+│   │   └── generation.py     #   re-export from six_forest.generation
 │   └── entropy_ip/           # stub
 ├── scanner/                  # Rust ICMPv6 prober
 │   ├── Cargo.toml
@@ -163,6 +165,7 @@ Metrics are inspired by TMA-23 (hit rate, coverage) and 6sense (subnet-level dis
 - Project pushed to GitHub; execution host is a Linux machine with 4090 GPU and public IPv6; full end-to-end run planned for next session
 - **6Forest complete**: maxcovering DHC partition + IsolatedForest/Four-Deviations outlier detection + density-ranked pattern expansion (`algorithms/six_forest/`)
 - **6Graph complete**: leftmost-split DHC (BFS) + greedy graph clustering with density gate + re-iteration on outliers (`algorithms/six_graph/`)
+- **DET complete**: minimum-entropy DHC (DFS) + density-ranked pattern expansion, no outlier step (`algorithms/det/`)
 
 ---
 
