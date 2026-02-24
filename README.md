@@ -16,7 +16,7 @@ The project reproduces and extends algorithms studied in:
 | Algorithm  | Original Language | Status         | Description |
 |------------|------------------|----------------|-------------|
 | 6tree      | C++              | **Complete**   | DHC tree — tree-based address generation |
-| 6Forest    | Python           | Stub           | Space-partitioning forest-based TGA |
+| 6Forest    | Python           | **Complete**   | Space-partitioning forest-based TGA |
 | 6GAN       | Python           | Stub           | GAN-based address generation |
 | 6GCVAE     | Python           | Stub           | Graph convolutional variational autoencoder |
 | 6Graph     | Python           | Stub           | Graph pattern mining TGA |
@@ -37,7 +37,10 @@ Target Generation Algorithms/
 │   │   ├── tree.py           #   DHC space tree construction
 │   │   ├── generation.py     #   density-ranked target generation
 │   │   └── README.md
-│   ├── six_forest/           # stub
+│   ├── six_forest/           # 6Forest — complete
+│   │   ├── partition.py      #   DHC with maxcovering split (LIFO)
+│   │   ├── outliers.py       #   IsolatedForest + Four-Deviations rule
+│   │   └── generation.py     #   density-ranked pattern expansion
 │   ├── six_gan/              # stub
 │   ├── six_gcvae/            # stub
 │   ├── six_graph/            # stub
@@ -155,6 +158,7 @@ Metrics are inspired by TMA-23 (hit rate, coverage) and 6sense (subnet-level dis
 - **Rust scanner**: minimal ICMPv6 echo prober (`scanner/`), pnet-based sender/receiver threads, configurable rate (default 20 kpps), auto-stops after reply timeout
 - **Evaluation pipeline**: `eval/` module with 6 metrics, aliased-prefix filtering with auto-download, online and offline modes
 - Project pushed to GitHub; execution host is a Linux machine with 4090 GPU and public IPv6; full end-to-end run planned for next session
+- **6Forest complete**: maxcovering DHC partition + IsolatedForest/Four-Deviations outlier detection + density-ranked pattern expansion (`algorithms/six_forest/`)
 
 ---
 
