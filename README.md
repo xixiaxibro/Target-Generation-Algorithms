@@ -19,7 +19,7 @@ The project reproduces and extends algorithms studied in:
 | 6Forest    | Python           | **Complete**   | Space-partitioning forest-based TGA |
 | 6GAN       | Python           | Stub           | GAN-based address generation |
 | 6GCVAE     | Python           | Stub           | Graph convolutional variational autoencoder |
-| 6Graph     | Python           | Stub           | Graph pattern mining TGA |
+| 6Graph     | Python           | **Complete**   | Graph pattern mining TGA |
 | 6Scan      | C/C++            | Stub           | Systematic IPv6 scanning |
 | 6VecLM     | Python           | Stub           | Vector language model |
 | DET        | Python           | Stub           | Dynamic entropy-based targeting |
@@ -43,7 +43,10 @@ Target Generation Algorithms/
 │   │   └── generation.py     #   density-ranked pattern expansion
 │   ├── six_gan/              # stub
 │   ├── six_gcvae/            # stub
-│   ├── six_graph/            # stub
+│   ├── six_graph/            # 6Graph — complete
+│   │   ├── partition.py      #   DHC with leftmost split (BFS/FIFO)
+│   │   ├── graph.py          #   greedy edge-adding + density gate clustering
+│   │   └── generation.py     #   re-export from six_forest.generation
 │   ├── six_scan/             # stub
 │   ├── six_vec_lm/           # stub
 │   ├── det/                  # stub
@@ -159,6 +162,7 @@ Metrics are inspired by TMA-23 (hit rate, coverage) and 6sense (subnet-level dis
 - **Evaluation pipeline**: `eval/` module with 6 metrics, aliased-prefix filtering with auto-download, online and offline modes
 - Project pushed to GitHub; execution host is a Linux machine with 4090 GPU and public IPv6; full end-to-end run planned for next session
 - **6Forest complete**: maxcovering DHC partition + IsolatedForest/Four-Deviations outlier detection + density-ranked pattern expansion (`algorithms/six_forest/`)
+- **6Graph complete**: leftmost-split DHC (BFS) + greedy graph clustering with density gate + re-iteration on outliers (`algorithms/six_graph/`)
 
 ---
 
