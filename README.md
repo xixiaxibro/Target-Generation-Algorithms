@@ -66,6 +66,7 @@ Target Generation Algorithms/
 ├── data/cache/               # auto-downloaded aliased-prefixes.txt (gitignored)
 ├── main.py                   # unified algorithm entry point
 ├── requirements.txt
+├── ANALYSIS.md               # structural critique of all 5 algorithms
 └── README.md
 ```
 
@@ -170,6 +171,7 @@ Metrics are inspired by TMA-23 (hit rate, coverage) and 6sense (subnet-level dis
 - **6Graph complete**: leftmost-split DHC (BFS) + greedy graph clustering with density gate + re-iteration on outliers (`algorithms/six_graph/`)
 - **DET complete**: minimum-entropy DHC (DFS) + density-ranked pattern expansion, no outlier step (`algorithms/det/`)
 - **entropy-ip complete**: Shannon entropy segmentation (a1) + three-pass pattern mining — heavy-hitter IQR, DBSCAN dense clusters, gap-based ranges (a2) + independent per-segment weighted sampling replacing Bayesian network (`algorithms/entropy_ip/`)
+- **Algorithm critique**: `ANALYSIS.md` — documents 5 structural issues across all implemented algorithms: DHC generation-layer independence assumption, entropy-ip multi-ISP segment independence failure, count-based leaf stop condition, 6Graph density gate no-op (threshold unreachable for n≥2), 6tree leftmost split weakness, 6Forest tiebreak unit mismatch, DET offline outlier gap; includes design-assumption table and redesign recommendations
 
 ---
 
