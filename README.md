@@ -17,10 +17,10 @@ The project reproduces and extends algorithms studied in:
 |------------|------------------|----------------|-------------|
 | 6tree      | C++              | **Complete**   | DHC tree — tree-based address generation |
 | 6Forest    | Python           | **Complete**   | Space-partitioning forest-based TGA |
-| 6GAN       | Python           | Stub           | GAN-based address generation |
-| 6GCVAE     | Python           | Stub           | Graph convolutional variational autoencoder |
+| 6GAN       | Python           | **Complete**   | SeqGAN: LSTM generator + CNN discriminator (INFOCOM 2021) |
+| 6GCVAE     | Python           | **Complete**   | Gated Convolutional VAE (PAKDD 2020) |
 | 6Graph     | Python           | **Complete**   | Graph pattern mining TGA |
-| 6Scan      | C/C++            | Stub           | Systematic IPv6 scanning |
+| 6Scan      | C/C++            | **Complete**   | /64 neighbourhood BFS enumeration (offline variant) |
 | 6VecLM     | Python           | **Complete**   | Word2Vec + Transformer language model |
 | DET        | Python           | **Complete**   | Density estimation tree, min-entropy DHC |
 | entropy-ip | Python/Bash      | **Complete**   | Entropy-based segmentation + pattern mining + independent segment sampling |
@@ -41,13 +41,18 @@ Target Generation Algorithms/
 │   │   ├── partition.py      #   DHC with maxcovering split (LIFO)
 │   │   ├── outliers.py       #   IsolatedForest + Four-Deviations rule
 │   │   └── generation.py     #   density-ranked pattern expansion
-│   ├── six_gan/              # stub
-│   ├── six_gcvae/            # stub
+│   ├── six_gan/              # 6GAN — complete
+│   │   ├── data.py           #   vocab (18 tokens), gen/dis DataLoaders
+│   │   ├── model.py          #   LSTMGenerator + CNNDiscriminator + Xavier init
+│   │   └── training.py       #   MLE pre-train, discriminator pre-train, SeqGAN adversarial
+│   ├── six_gcvae/            # 6GCVAE — complete
+│   │   ├── model.py          #   GatedConvBlock, GCVAEEncoder/Decoder, GCVAE, vae_loss
+│   │   └── generation.py     #   latent sampling → decode → IPv6 strings
 │   ├── six_graph/            # 6Graph — complete
 │   │   ├── partition.py      #   DHC with leftmost split (BFS/FIFO)
 │   │   ├── graph.py          #   greedy edge-adding + density gate clustering
 │   │   └── generation.py     #   re-export from six_forest.generation
-│   ├── six_scan/             # stub
+│   ├── six_scan/             # 6Scan — complete (offline neighbourhood enumeration)
 │   ├── six_vec_lm/           # 6VecLM — complete
 │   │   ├── preprocessing.py  #   tokenize_address, Word2Vec training (gensim 4.x)
 │   │   ├── model.py          #   Encoder-Decoder Transformer (ported + API fixes)
@@ -176,6 +181,9 @@ Metrics are inspired by TMA-23 (hit rate, coverage) and 6sense (subnet-level dis
 - **entropy-ip complete**: Shannon entropy segmentation (a1) + three-pass pattern mining — heavy-hitter IQR, DBSCAN dense clusters, gap-based ranges (a2) + independent per-segment weighted sampling replacing Bayesian network (`algorithms/entropy_ip/`)
 - **Algorithm critique**: `ANALYSIS.md` — documents 5 structural issues across all implemented algorithms: DHC generation-layer independence assumption, entropy-ip multi-ISP segment independence failure, count-based leaf stop condition, 6Graph density gate no-op (threshold unreachable for n≥2), 6tree leftmost split weakness, 6Forest tiebreak unit mismatch, DET offline outlier gap; includes design-assumption table and redesign recommendations
 - **6VecLM complete**: Word2Vec (gensim 4.x CBOW, 100-d) + 6-layer Encoder-Decoder Transformer with CosineEmbeddingLoss (`algorithms/six_vec_lm/`); position-aware nibble tokenisation; temperature-cosine-similarity sampling for IID generation; SHA-256 seed-hash model caching to `data/cache/6veclm/`; migrated all deprecated gensim/PyTorch APIs (`vector_size`, `key_to_index`, `index_to_key`, `xavier_uniform_`, no `Variable`)
+- **6GAN complete**: SeqGAN LSTM-generator + CNN-discriminator (`algorithms/six_gan/`); INFOCOM 2021 port to PyTorch; 3-phase: MLE pre-train (50 epochs) → discriminator pre-train (10 iters) → adversarial SeqGAN (200 batches, Monte Carlo rollout × 16, REINFORCE); SHA-256 generator cache in `data/cache/6gan/`
+- **6GCVAE complete**: Gated Convolutional VAE (`algorithms/six_gcvae/`); PAKDD 2020 port to PyTorch; GatedConvBlock (gated residual, doubling channels), encoder → (z_mean, z_log_var, latent_dim=128), decoder ← z → (seq_len × vocab) logits; ELBO loss (cross-entropy + β·KL); latent-sample generation; SHA-256 model cache in `data/cache/6gcvae/`
+- **6Scan complete**: offline /64-neighbourhood BFS enumeration (`algorithms/six_scan/`); groups seeds by /64 prefix, sweeps Hamming distance 1→2→3 across IID nibbles in priority order (largest /64 first), random IID fill for any residual budget; no ML model required
 
 ---
 
