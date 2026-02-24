@@ -23,7 +23,7 @@ The project reproduces and extends algorithms studied in:
 | 6Scan      | C/C++            | Stub           | Systematic IPv6 scanning |
 | 6VecLM     | Python           | Stub           | Vector language model |
 | DET        | Python           | **Complete**   | Density estimation tree, min-entropy DHC |
-| entropy-ip | Python/Bash      | Stub           | Entropy/Bayesian address generation |
+| entropy-ip | Python/Bash      | **Complete**   | Entropy-based segmentation + pattern mining + independent segment sampling |
 
 ---
 
@@ -52,7 +52,10 @@ Target Generation Algorithms/
 │   ├── det/                  # DET — complete
 │   │   ├── partition.py      #   DHC with minimum-entropy split (LIFO/DFS)
 │   │   └── generation.py     #   re-export from six_forest.generation
-│   └── entropy_ip/           # stub
+│   └── entropy_ip/           # entropy-ip — complete
+│       ├── segments.py       #   Shannon entropy computation + segment boundary detection
+│       ├── mining.py         #   heavy-hitter / DBSCAN / gap-based pattern mining
+│       └── generation.py     #   independent per-segment weighted sampling
 ├── scanner/                  # Rust ICMPv6 prober
 │   ├── Cargo.toml
 │   └── src/main.rs           #   sender/receiver threads, 20 kpps, pnet
@@ -166,6 +169,7 @@ Metrics are inspired by TMA-23 (hit rate, coverage) and 6sense (subnet-level dis
 - **6Forest complete**: maxcovering DHC partition + IsolatedForest/Four-Deviations outlier detection + density-ranked pattern expansion (`algorithms/six_forest/`)
 - **6Graph complete**: leftmost-split DHC (BFS) + greedy graph clustering with density gate + re-iteration on outliers (`algorithms/six_graph/`)
 - **DET complete**: minimum-entropy DHC (DFS) + density-ranked pattern expansion, no outlier step (`algorithms/det/`)
+- **entropy-ip complete**: Shannon entropy segmentation (a1) + three-pass pattern mining — heavy-hitter IQR, DBSCAN dense clusters, gap-based ranges (a2) + independent per-segment weighted sampling replacing Bayesian network (`algorithms/entropy_ip/`)
 
 ---
 
