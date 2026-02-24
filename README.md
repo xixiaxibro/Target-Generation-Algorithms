@@ -21,7 +21,7 @@ The project reproduces and extends algorithms studied in:
 | 6GCVAE     | Python           | Stub           | Graph convolutional variational autoencoder |
 | 6Graph     | Python           | **Complete**   | Graph pattern mining TGA |
 | 6Scan      | C/C++            | Stub           | Systematic IPv6 scanning |
-| 6VecLM     | Python           | Stub           | Vector language model |
+| 6VecLM     | Python           | **Complete**   | Word2Vec + Transformer language model |
 | DET        | Python           | **Complete**   | Density estimation tree, min-entropy DHC |
 | entropy-ip | Python/Bash      | **Complete**   | Entropy-based segmentation + pattern mining + independent segment sampling |
 
@@ -48,7 +48,10 @@ Target Generation Algorithms/
 │   │   ├── graph.py          #   greedy edge-adding + density gate clustering
 │   │   └── generation.py     #   re-export from six_forest.generation
 │   ├── six_scan/             # stub
-│   ├── six_vec_lm/           # stub
+│   ├── six_vec_lm/           # 6VecLM — complete
+│   │   ├── preprocessing.py  #   tokenize_address, Word2Vec training (gensim 4.x)
+│   │   ├── model.py          #   Encoder-Decoder Transformer (ported + API fixes)
+│   │   └── generation.py     #   greedy_decode, next_generation, generate_addresses
 │   ├── det/                  # DET — complete
 │   │   ├── partition.py      #   DHC with minimum-entropy split (LIFO/DFS)
 │   │   └── generation.py     #   re-export from six_forest.generation
@@ -172,6 +175,7 @@ Metrics are inspired by TMA-23 (hit rate, coverage) and 6sense (subnet-level dis
 - **DET complete**: minimum-entropy DHC (DFS) + density-ranked pattern expansion, no outlier step (`algorithms/det/`)
 - **entropy-ip complete**: Shannon entropy segmentation (a1) + three-pass pattern mining — heavy-hitter IQR, DBSCAN dense clusters, gap-based ranges (a2) + independent per-segment weighted sampling replacing Bayesian network (`algorithms/entropy_ip/`)
 - **Algorithm critique**: `ANALYSIS.md` — documents 5 structural issues across all implemented algorithms: DHC generation-layer independence assumption, entropy-ip multi-ISP segment independence failure, count-based leaf stop condition, 6Graph density gate no-op (threshold unreachable for n≥2), 6tree leftmost split weakness, 6Forest tiebreak unit mismatch, DET offline outlier gap; includes design-assumption table and redesign recommendations
+- **6VecLM complete**: Word2Vec (gensim 4.x CBOW, 100-d) + 6-layer Encoder-Decoder Transformer with CosineEmbeddingLoss (`algorithms/six_vec_lm/`); position-aware nibble tokenisation; temperature-cosine-similarity sampling for IID generation; SHA-256 seed-hash model caching to `data/cache/6veclm/`; migrated all deprecated gensim/PyTorch APIs (`vector_size`, `key_to_index`, `index_to_key`, `xavier_uniform_`, no `Variable`)
 
 ---
 
